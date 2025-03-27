@@ -94,6 +94,21 @@ services:
       n8n-import:
         condition: service_completed_successfully
 
+  ngrok:
+    container_name: ngrok
+    image: ngrok/ngrok:latest
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_TOKEN}
+    command:
+      - "start"
+      - "--all"
+      - "--config"
+      - "/etc/ngrok.yml"
+    networks:
+      - n8n-network
+    volumes:
+      - ./ngrok.yml:/etc/ngrok.yml
+
   qdrant:
     image: qdrant/qdrant
     container_name: qdrant
@@ -214,3 +229,7 @@ services:
     image: ollama/ollama:rocm
     depends_on:
      - ollama-gpu-amd
+
+networks:
+  n8n-network:
+    driver: bridge
